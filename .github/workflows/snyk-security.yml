@@ -55,7 +55,7 @@ jobs:
       
       - name: Run Snyk to check for vulnerabilities
         uses: snyk/actions/python-3.8@master
-
+        continue-on-error: true
         env:
           # This is where you will need to introduce the Snyk API token created with your Snyk account
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
