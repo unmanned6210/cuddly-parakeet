@@ -26,12 +26,22 @@ on:
 
 permissions:
   contents: read
+  security-events: read
 
 jobs:
   security:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
+
+      - name: Print Snyk Version and Auth Info
+        run: |
+          snyk --version
+          snyk auth ${{ secrets.SNYK_TOKEN }}
+
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+      
       - name: Run Snyk to check for vulnerabilities
         uses: snyk/actions/python-3.9@master
         continue-on-error: true # To make sure that SARIF upload gets called
