@@ -38,7 +38,7 @@ jobs:
         run: snyk auth ${{ secrets.SNYK_TOKEN }}
       
       - name: Snyk SCA
-        run: sny test --sarif > snyk.sarif || true
+        run: snyk test --sarif > snyk.sarif || true
       
       
       #- name: Run Snyk to check for vulnerabilities
