@@ -2,6 +2,7 @@
 # All test code
 
 import requests
+import subprocess
 
 
 URL = "https://bbc.co.uk"
@@ -13,3 +14,10 @@ if r.status_code == 200:
 else:
     print(f"Error status code {r.status_code}")
 
+command = input("Give a command")
+
+subprocess.run(command, shell=True)
+
+bad = input("Which dir to list?")
+
+subprocess.run(bad, shell=True)
