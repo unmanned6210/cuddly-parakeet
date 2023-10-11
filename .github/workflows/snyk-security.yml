@@ -33,14 +33,15 @@ jobs:
 
       - name: Snyk setup
         uses: snyk/actions/setup@master
-        with:
-          snyk-token: ${{ secrets.SNYK_TOKEN }}
+
+      - name: Snyk auth
+        run: snyk auth ${{ secrets.SNYK_TOKEN }}
       
       - name: Run Snyk to check for vulnerabilities
         uses: snyk/actions/python-3.8@master
         continue-on-error: true # To make sure that SARIF upload gets called
-        env:
-          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        ##env:
+        ##  SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
           args: --sarif-file-output=snyk.sarif
 
