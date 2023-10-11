@@ -37,13 +37,17 @@ jobs:
       - name: Snyk auth
         run: snyk auth ${{ secrets.SNYK_TOKEN }}
       
-      - name: Run Snyk to check for vulnerabilities
-        uses: snyk/actions/python-3.8@master
-        continue-on-error: true # To make sure that SARIF upload gets called
-        env:
-          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-        with:
-          args: --sarif-file-output=snyk.sarif
+      - name: Snyk SCA
+        run: sny test --sarif > snyk.sarif || true
+      
+      
+      #- name: Run Snyk to check for vulnerabilities
+      #  uses: snyk/actions/python-3.8@master
+      #  continue-on-error: true # To make sure that SARIF upload gets called
+      #  env:
+      #    SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+      #  with:
+      #    args: --sarif-file-output=snyk.sarif
 
       - name: Upload Snyk Vulnerability Scan Results to GitHub Code Scanning
         uses: github/codeql-action/upload-sarif@v2
@@ -51,17 +55,14 @@ jobs:
           sarif_file: snyk.sarif
 
       - name: Snyk Code test
-        run: snyk code test --sarif | tee snyk-code.sarif  || true
-        #run: snyk code test || true  
+      # The output won't be visible in the actions log but reading sarif is no bueno
+        run: snyk code test --sarif > snyk-code.sarif  || true
 
       # Runs Snyk Code (SAST) analysis and uploads result to Snyk.
+      # Only enable if you want to upload the dependencies to the Snyk web platform
       #- name: Snyk Code monitor
       #  run: snyk monitor --all-projects
       
-      #  Runs Snyk Open Source (SCA) analysis and uploads result to Snyk.
-      #- name: Snyk Open Source monitor
-      #  run: snyk monitor --all-projects
-
        # Push the Snyk Code results into GitHub Code Scanning tab
       - name: Upload result to GitHub Code Scanning
         uses: github/codeql-action/upload-sarif@v2
