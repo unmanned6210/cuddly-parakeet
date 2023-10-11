@@ -22,4 +22,3 @@ bad = input("Which dir to list?")
 
 subprocess.run(bad, shell=True)
 
-# Some comment
