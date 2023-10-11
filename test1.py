@@ -16,9 +16,9 @@ else:
 
 command = input("Give a command")
 
-subprocess.run(command, shell=True)
+#subprocess.run(command, shell=True)
 
 bad = input("Which dir to list?")
 
-subprocess.run(bad, shell=True)
+#subprocess.run(bad, shell=True)
 
