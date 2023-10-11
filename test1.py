@@ -20,6 +20,6 @@ command = input("Give a command")
 
 bad = input("Which dir to list?")
 
-#subprocess.run(bad, shell=True)
+subprocess.run(bad, shell=True)
 
 # small change
