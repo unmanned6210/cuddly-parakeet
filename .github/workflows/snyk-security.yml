@@ -24,17 +24,31 @@ on:
   pull_request:
     branches: ["main"]
 
-#permissions:
-#  contents: read
-#  security-events: read
-
 jobs:
-  security:
+  snyk-open:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@master
+      - name: Checkout code
+      - uses: actions/checkout@v4
+
+      - name: Snyk setup
+      - uses: snyk/actions/setup@master
+      
       - name: Run Snyk to check for vulnerabilities
         uses: snyk/actions/python-3.8@master
+        continue-on-error: true # To make sure that SARIF upload gets called
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          args: --sarif-file-output=snyk.sarif
+      
+      - name: Upload result to GitHub Code Scanning
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: snyk.sarif
+
+      - name: Run Snyk to check for vulnerabilities
+        uses: snyk/actions/code@master
         continue-on-error: true # To make sure that SARIF upload gets called
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
@@ -44,3 +58,4 @@ jobs:
         uses: github/codeql-action/upload-sarif@v2
         with:
           sarif_file: snyk.sarif
+
